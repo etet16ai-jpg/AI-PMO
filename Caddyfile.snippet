@@ -1,0 +1,12 @@
+# Add this block to /home/opc/n8n/Caddyfile (the production Caddy config),
+# then reload with zero downtime:
+#
+#   docker exec caddy caddy reload --config /etc/caddy/Caddyfile
+#
+# Requires: a DNS A record for final.siteflys.com -> this server's public IP,
+# otherwise Caddy cannot obtain a TLS certificate for it (the existing
+# n8n.siteflys.com route is unaffected either way).
+
+final.siteflys.com {
+    reverse_proxy n8n-final:5678
+}

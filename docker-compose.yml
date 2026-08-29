@@ -1,0 +1,58 @@
+# Graduation project — AI-ERP with n8n
+#
+# A SECOND, fully isolated n8n instance. It shares nothing with the production
+# n8n (container "n8n", siteflys.com) except the host machine and the Caddy
+# reverse proxy:
+#   - its own container (n8n-final), its own DB + encryption key (n8n_final_data)
+#   - its own compose project ("final-project") and default network
+#   - hard memory / CPU caps so it can never starve the production stack
+#
+# It also attaches to the external "n8n_default" network so the existing Caddy
+# container can reach it by name (n8n-final:5678) — see ./Caddyfile.snippet.
+#
+# Nothing in here is enabled against real services until the .env file is
+# filled in (copy .env.example -> .env).
+
+name: final-project
+
+services:
+  n8n-final:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n-final
+    restart: always
+    # Localhost-only direct port for setup / debugging before the public
+    # subdomain is wired up. Not reachable from the internet.
+    ports:
+      - "127.0.0.1:5679:5678"
+    environment:
+      - N8N_HOST=${N8N_HOST:-final.siteflys.com}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - N8N_EDITOR_BASE_URL=https://${N8N_HOST:-final.siteflys.com}/
+      - WEBHOOK_URL=https://${N8N_HOST:-final.siteflys.com}/
+      - N8N_SECURE_COOKIE=true
+      - NODE_ENV=production
+      - GENERIC_TIMEZONE=Asia/Jerusalem
+      - TZ=Asia/Jerusalem
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_PERSONALIZATION_ENABLED=false
+    volumes:
+      - n8n_final_data:/home/node/.n8n
+    networks:
+      - default
+      - shared
+    # Hard caps — protect the production stack on the same host.
+    mem_limit: 1536m
+    mem_reservation: 384m
+    cpus: 1.0
+
+volumes:
+  n8n_final_data:
+
+networks:
+  default:
+  shared:
+    external: true
+    name: n8n_default

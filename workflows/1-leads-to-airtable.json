@@ -1,0 +1,377 @@
+{
+  "updatedAt": "2026-08-29T14:26:52.069Z",
+  "createdAt": "2026-08-29T12:53:03.988Z",
+  "id": "YkudVfHXbhmvKAvb",
+  "name": "1 - Leads -> Airtable",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a35ea6d4-19c5-4c9d-be27-dc92d9a3a566",
+        "options": {
+          "ipWhitelist": ""
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -592,
+        32
+      ],
+      "id": "cf85c97c-a42f-44f6-b670-edb1245a35e1",
+      "name": "Webhook",
+      "webhookId": "a35ea6d4-19c5-4c9d-be27-dc92d9a3a566"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblIIiy3xW8az3LHN",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tblIIiy3xW8az3LHN"
+        },
+        "filterByFormula": "={Email}=\"{{ $json.body.email }}\"",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        -64
+      ],
+      "id": "6840df34-3aa6-4e76-9187-d3f742fe20bc",
+      "name": "Search records",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xLyMzrrhJ7AQ9ItJ",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "58d562e4-4f00-4df7-911d-df79fe81c3b8",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        64,
+        -160
+      ],
+      "id": "03a589d6-77e0-4222-9e8c-333d17366d01",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblIIiy3xW8az3LHN",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tblIIiy3xW8az3LHN"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "New",
+            "Email": "={{ $('Webhook').item.json.body.email }}",
+            "Phone": "={{ $('Webhook').item.json.body.phone }}",
+            "Name": "={{ $('Webhook').item.json.body.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        -160
+      ],
+      "id": "60f8e0e6-6900-4b66-a46f-5ef26920755d",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xLyMzrrhJ7AQ9ItJ",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "etet16@gmail.com",
+        "subject": "GMR- ליד חדש התקבל",
+        "message": "sdasd",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        144
+      ],
+      "id": "8158d98e-50c4-4684-973d-c09714bda42a",
+      "name": "Send a message",
+      "webhookId": "321e5c6a-06e4-44df-b6ff-76994b96295d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "E7pMFSRZ7ptTXkDT",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Webhook\nנקודת הכניסה. מקבל ליד חדש בבקשת POST (שם / אימייל / טלפון) מטופס באתר.\nנתיב: /webhook/a35ea6d4-…",
+        "height": 232,
+        "width": 204
+      },
+      "id": "d6517149-2020-409b-b0df-420be4ceafb4",
+      "name": "📝 Webhook",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Search records\nמחפש בטבלת Leads ב-Airtable אם כבר קיימת רשומה עם אותו אימייל (filterByFormula על שדה Email). מוגבל לתוצאה אחת — לזיהוי כפילויות.",
+        "height": 168,
+        "width": 220
+      },
+      "id": "658a4f82-b5ca-4280-bda9-d80312145dd2",
+      "name": "📝 Search records",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### If\nבודק אם לא נמצאה רשומה קיימת (id לא קיים) — כלומר זה ליד חדש. אם כן ממשיך ליצירה; אחרת עוצר.",
+        "height": 168,
+        "width": 220
+      },
+      "id": "d8b951d1-66b8-41c6-96e7-60e33223d59b",
+      "name": "📝 If",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        -368
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Create a record\nיוצר רשומת ליד חדשה בטבלת Leads עם Name / Email / Phone מהטופס ו-Status = 'New'.",
+        "height": 200,
+        "width": 300
+      },
+      "id": "79a5cd93-032b-4e88-95e5-6cb6d05ba5f2",
+      "name": "📝 Create a record",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        624,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Send a message\nשולח מייל התראה על הליד דרך Gmail.\n⚠️ כרגע ערכי דמה: נמען tomer@fooks.co.il, נושא ותוכן 'asdasd' — למלא לפני הפעלה.",
+        "height": 216,
+        "width": 220
+      },
+      "id": "7d4aca0a-50ee-4c3e-8f3f-5683e303223b",
+      "name": "📝 Send a message",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        256,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd8329e78b6e09d6a2ab07ed1e55ff263fde7292aa0503e159a621580d088164"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "6053955b-1b21-4dc9-b29e-e0334e65308c",
+  "activeVersionId": null,
+  "versionCounter": 37,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-08-29T12:53:03.992Z",
+      "createdAt": "2026-08-29T12:53:03.992Z",
+      "role": "workflow:owner",
+      "workflowId": "YkudVfHXbhmvKAvb",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

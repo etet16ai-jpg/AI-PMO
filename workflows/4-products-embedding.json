@@ -1,0 +1,265 @@
+{
+  "updatedAt": "2026-08-29T15:16:34.866Z",
+  "createdAt": "2026-08-29T12:53:04.002Z",
+  "id": "Adso7XaSeq0PmIPa",
+  "name": "4 - Products Embedding",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d55357b0-109a-4cff-ac98-436e65236b10",
+      "name": "Embeddings",
+      "position": [
+        880,
+        512
+      ],
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "OKimMQNyEN6En4MH",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "loader": "csvLoader",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "id": "ac7190bc-1d21-42b9-af41-bc43c49bbcfe",
+      "name": "Load Documents",
+      "position": [
+        1408,
+        352
+      ],
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "chunkSize": 800,
+        "chunkOverlap": 100,
+        "options": {}
+      },
+      "id": "42dc0c46-f33c-48aa-8edd-433fcdbf5cd8",
+      "name": "Split Text",
+      "position": [
+        1264,
+        528
+      ],
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "formTitle": "Upload Products CSV",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        512,
+        272
+      ],
+      "id": "1f54614c-54ce-41f4-9347-b425ff6b5125",
+      "name": "On form submission",
+      "webhookId": "82fabefc-a621-4d5a-a60e-bdc172f8dc71"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "theproducts"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        1088,
+        224
+      ],
+      "id": "0e456b8d-9c0b-4d8c-93cc-4890559336e9",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "content": "### Embeddings\nיוצר embeddings לכל קטע מוצרים באמצעות OpenAI.",
+        "height": 168,
+        "width": 204
+      },
+      "id": "fe5d928c-9aed-47bd-91e4-6736187c6245",
+      "name": "📝 Embeddings",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        496
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Load Documents\nטוען את קובץ המוצרים שהוגש לפורמט מסמכים.",
+        "height": 168,
+        "width": 204
+      },
+      "id": "bcce368f-78c5-413b-ab0b-54fab32dcdd0",
+      "name": "📝 Load Documents",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Split Text\nמפצל את הטקסט לקטעים חופפים (Recursive Character Text Splitter) כדי שכל קטע ייכנס בגודל סביר ל-embedding.",
+        "height": 184,
+        "width": 156
+      },
+      "id": "c344ccb1-cf4d-431e-b0fd-9689a3e2e506",
+      "name": "📝 Split Text",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### On form submission\nטריגר טופס — דרכו מעלים קטלוג / מידע מוצרים להטמעה.",
+        "height": 168,
+        "width": 220
+      },
+      "id": "1e3847db-2690-4f2f-ac33-6ca41769beb3",
+      "name": "📝 On form submission",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        528,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Simple Vector Store\nמכניס את וקטורי המוצרים למאגר הווקטורי בזיכרון (mode = insert) — הבסיס לשליפת מידע מוצרים על ידי ה-AI.",
+        "height": 184,
+        "width": 204
+      },
+      "id": "905ff7a9-e348-445d-b16a-bc49d893a92f",
+      "name": "📝 Simple Vector Store",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Documents": {
+      "ai_document": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Text": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Load Documents",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd8329e78b6e09d6a2ab07ed1e55ff263fde7292aa0503e159a621580d088164"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "f27048c4-c3fa-482a-beed-1d60177ee433",
+  "activeVersionId": null,
+  "versionCounter": 25,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-08-29T12:53:04.004Z",
+      "createdAt": "2026-08-29T12:53:04.004Z",
+      "role": "workflow:owner",
+      "workflowId": "Adso7XaSeq0PmIPa",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

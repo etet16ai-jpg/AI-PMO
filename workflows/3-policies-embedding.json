@@ -1,0 +1,223 @@
+{
+  "updatedAt": "2026-08-29T13:21:41.755Z",
+  "createdAt": "2026-08-29T12:53:03.999Z",
+  "id": "RXb6U30tYCjnXp2x",
+  "name": "3 - Policies Embedding",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1ef8d6f9-ee68-4edc-b53c-4a7334e0057a",
+      "name": "Embeddings",
+      "position": [
+        896,
+        496
+      ],
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "OKimMQNyEN6En4MH",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "id": "3ed3173d-6462-4d4b-a5da-c68ab9b831d6",
+      "name": "Load Documents",
+      "position": [
+        1344,
+        464
+      ],
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "formTitle": "Upload Policies",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        784,
+        288
+      ],
+      "id": "8902d626-9a97-49a0-b4f4-38739aa9b667",
+      "name": "On form submission",
+      "webhookId": "33b7dec0-ddbd-4d1a-a738-1f162d8301f4"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "value": "mypolicies",
+          "mode": "list",
+          "cachedResultName": "mypolicies"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        1008,
+        288
+      ],
+      "id": "b92bc88d-a551-4c98-8c13-887938c699e5",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "content": "### Embeddings\nיוצר embeddings (וקטורים) למסמך באמצעות OpenAI — ההצגה המספרית של הטקסט לחיפוש סמנטי.",
+        "height": 168,
+        "width": 204
+      },
+      "id": "90fb3e9c-6e23-4d02-a962-693a78272b6c",
+      "name": "📝 Embeddings",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        672,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Load Documents\nטוען את המסמך שהוגש והופך אותו לפורמט מסמכים שה-vector store יודע לעבד.",
+        "height": 216,
+        "width": 188
+      },
+      "id": "e0105e8d-b80e-46bb-97e0-46bbfbdf380b",
+      "name": "📝 Load Documents",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1456,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### On form submission\nטריגר טופס — דרכו מעלים מסמכי מדיניות / נהלים להטמעה במאגר הווקטורי.",
+        "height": 200,
+        "width": 220
+      },
+      "id": "efad1daa-3093-473e-a899-0da02d4458f7",
+      "name": "📝 On form submission",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        608,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Simple Vector Store\nמאחסן את הווקטורים במאגר וקטורי בזיכרון (mode = insert). זה ה'ידע' שסוכן ה-RAG שולף ממנו לגבי נהלים.",
+        "height": 216,
+        "width": 204
+      },
+      "id": "5cc0b783-442b-4536-b202-cb89ce6b7f8c",
+      "name": "📝 Simple Vector Store",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        48
+      ]
+    }
+  ],
+  "connections": {
+    "Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Documents": {
+      "ai_document": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd8329e78b6e09d6a2ab07ed1e55ff263fde7292aa0503e159a621580d088164"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "2fc9e417-23e5-4ad2-b364-5659db81e68f",
+  "activeVersionId": null,
+  "versionCounter": 22,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-08-29T12:53:04.001Z",
+      "createdAt": "2026-08-29T12:53:04.001Z",
+      "role": "workflow:owner",
+      "workflowId": "RXb6U30tYCjnXp2x",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

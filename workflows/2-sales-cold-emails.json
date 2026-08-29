@@ -1,0 +1,455 @@
+{
+  "updatedAt": "2026-08-29T19:19:06.328Z",
+  "createdAt": "2026-08-29T12:53:03.995Z",
+  "id": "nA87g3ru8o8sBgTC",
+  "name": "2 - Sales Cold Emails",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "id": "71c4e1f8-8193-4e20-8426-81ea31f9f1a8",
+      "name": "Every 3 Hours",
+      "position": [
+        48,
+        256
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblIIiy3xW8az3LHN",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tblIIiy3xW8az3LHN"
+        },
+        "filterByFormula": "Status='New'",
+        "returnAll": false,
+        "limit": 10,
+        "options": {}
+      },
+      "id": "d49a2041-afd8-4ce2-84b5-050ec3f8b5c2",
+      "name": "Search New Leads",
+      "position": [
+        384,
+        224
+      ],
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "retryOnFail": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ 'Write a short, friendly cold sales email in Hebrew to a business lead named ' + $json.Name + ' (company: ' + ($json.Company || 'לא ידוע') + ') who is interested in: ' + ($json.Interest || 'מוצרי אלקטרוניקה') + '. We are AI Electronics, an Israeli electronics retailer. One clear call to action. Max 120 words. Return only the email body.' }}"
+      },
+      "id": "20ebb8bf-ae5b-468e-a672-8f5694a68645",
+      "name": "Write Cold Email",
+      "position": [
+        656,
+        144
+      ],
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Search New Leads').item.json.Email }}",
+        "subject": "הצעה מיוחדת מ-AI Electronics",
+        "message": "={{ $json.text }}",
+        "options": {}
+      },
+      "id": "341bb1a5-7b22-4730-a7bd-dcfdaed92736",
+      "name": "Send Email",
+      "position": [
+        1056,
+        208
+      ],
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "webhookId": "b0033b40-e2c4-42ea-9d68-09eee650e7a3",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "E7pMFSRZ7ptTXkDT",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblIIiy3xW8az3LHN",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tblIIiy3xW8az3LHN"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Search New Leads').item.json.id }}",
+            "Status": "Contacted"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created",
+              "displayName": "Created",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Interest",
+              "displayName": "Interest",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "83899549-d399-4e68-98d2-fe8153c60131",
+      "name": "Mark Contacted",
+      "position": [
+        1360,
+        240
+      ],
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-5.4-mini",
+        "options": {}
+      },
+      "id": "22aa93de-b164-499f-83f7-acce3a0c0569",
+      "name": "Chat Model",
+      "position": [
+        544,
+        432
+      ],
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "OKimMQNyEN6En4MH",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Every 3 Hours\nטריגר תזמון — רץ כל 3 שעות ומפעיל את מחזור הפנייה היזומה ללידים.",
+        "height": 184,
+        "width": 172
+      },
+      "id": "22cb9189-d35b-43a5-a54e-1c669ac22290",
+      "name": "📝 Every 3 Hours",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Search New Leads\nשולף מ-Airtable\n עד 10 לידים מטבלת\n Leads שה-Status שלהם = 'New'.",
+        "height": 184,
+        "width": 204
+      },
+      "id": "f410aa3f-a59e-4ffe-ac6f-8df1b48683a1",
+      "name": "📝 Search New Leads",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Write Cold Email\nשרשרת LLM — מנסחת מייל מכירה קצר וידידותי בעברית לכל ליד (שם / חברה / תחום עניין), עד 120 מילים, מחזירה רק את גוף המייל.",
+        "height": 216,
+        "width": 252
+      },
+      "id": "9de65dec-833e-44b7-8c17-491dabeeffa4",
+      "name": "📝 Write Cold Email",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        592,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Send Email\nשולח את המייל שנוצר דרך Gmail לכתובת הליד.\n⚠️ מפנה לשדה '…json.Emailsds' — שם שדה שגוי, אמור להיות Email.",
+        "height": 184,
+        "width": 252
+      },
+      "id": "001e72e3-111a-4a01-8d2d-7b74d2e5d537",
+      "name": "📝 Send Email",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        976,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Mark Contacted\nמעדכן ב-Airtable את הליד ל-Status = 'Contacted' לפי ה-id, כדי שלא יקבל מייל שוב בריצה הבאה.",
+        "height": 184,
+        "width": 268
+      },
+      "id": "6ce0eed4-630d-48d9-92a7-338bdc1a92eb",
+      "name": "📝 Mark Contacted",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Chat Model\nמודל השפה (OpenAI) שה-node 'Write Cold Email' משתמש בו לניסוח.",
+        "height": 168,
+        "width": 252
+      },
+      "id": "3cad1a91-09e2-454e-bf86-c819ba0b9644",
+      "name": "📝 Chat Model",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        416
+      ]
+    }
+  ],
+  "connections": {
+    "Every 3 Hours": {
+      "main": [
+        [
+          {
+            "node": "Search New Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search New Leads": {
+      "main": [
+        [
+          {
+            "node": "Write Cold Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Mark Contacted",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Write Cold Email": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Write Cold Email",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd8329e78b6e09d6a2ab07ed1e55ff263fde7292aa0503e159a621580d088164"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "5d76ae06-0201-433f-b1dd-0924e8b51002",
+  "activeVersionId": null,
+  "versionCounter": 62,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-08-29T12:53:03.997Z",
+      "createdAt": "2026-08-29T12:53:03.997Z",
+      "role": "workflow:owner",
+      "workflowId": "nA87g3ru8o8sBgTC",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}
