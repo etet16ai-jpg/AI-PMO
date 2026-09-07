@@ -1,0 +1,11 @@
+# Fix GitHub's language detection (Linguist), which was misreading this repo
+# as 100% "Vim Snippet" because of the Caddyfile.snippet extension.
+Caddyfile.snippet linguist-language=Caddyfile
+*.snippet linguist-language=Text
+
+# The real content of this repo — count workflow exports as JSON.
+workflows/*.json linguist-language=JSON linguist-detectable=true
+
+# Docs/screenshots and the course brief are not source code.
+docs/images/*.png -linguist-detectable
+final-project-spec.docx -linguist-detectable
