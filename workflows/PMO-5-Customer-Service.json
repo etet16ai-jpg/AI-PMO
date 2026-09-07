@@ -1,0 +1,384 @@
+{
+  "updatedAt": "2026-09-06T22:30:29.322Z",
+  "createdAt": "2026-09-03T23:48:14.187Z",
+  "id": "quU84dUpSZkeWGBr",
+  "name": "PMO - 5 - Customer Service",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -2192,
+        -256
+      ],
+      "id": "86633a5d-3f0e-4e54-93f6-4cbca7bc3df1",
+      "name": "Telegram Trigger",
+      "webhookId": "e5f6d07f-5f74-4ee1-9a3d-e2674668af63",
+      "credentials": {
+        "telegramApi": {
+          "id": "LaqP3LaVLRZ6NrT7",
+          "name": "ERP Support"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "אתה נציג שירות לקוחות של AI Electronics, חנות אלקטרוניקה. ענה בעברית, קצר ואדיב.\nהשתמש בכלים policies ו-products כדי לשלוף מידע, וענה רק לפי מה שחזר מהם.\nאם המידע לא נמצא — אמור: \"אין לי מידע על זה, אעביר לנציג אנושי\".\nאל תמציא מחירים, מדיניות, זמינות מלאי או פרטים.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1664,
+        -320
+      ],
+      "id": "1f3fbd49-571e-447a-98b2-23fbccd0d7f4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1760,
+        -224
+      ],
+      "id": "54a0c2fb-c077-4746-acc5-baa8ae0edaaf",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OKimMQNyEN6En4MH",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "מדיניות החברה: החזרות, החלפות, משלוחים, אחריות, שעות פעילות, תשלומים ומחירים",
+        "memoryKey": {
+          "__rl": true,
+          "value": "mypolicies",
+          "mode": "id"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        -1376,
+        -48
+      ],
+      "id": "3f42afb4-e445-4ddd-a686-bbcc2ab97fd8",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1456,
+        32
+      ],
+      "id": "c29b9f98-5383-4867-9295-32f474f290fa",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "OKimMQNyEN6En4MH",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "השתמש בזה בכדי למצוא מידע על מלאי ומוצרים",
+        "memoryKey": {
+          "__rl": true,
+          "value": "theproducts",
+          "mode": "id"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        -1936,
+        -32
+      ],
+      "id": "1818f274-3ef6-4470-9dcb-48b5deb82420",
+      "name": "Simple Vector Store1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2016,
+        48
+      ],
+      "id": "ded003a3-321e-4e71-a7e6-2520422cf88a",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OKimMQNyEN6En4MH",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -944,
+        -272
+      ],
+      "id": "952bdfa4-9d3d-4e0f-9de3-e0b1d8793594",
+      "name": "Send a text message",
+      "webhookId": "1bce9ec9-6197-4925-9e6b-9b1364b33e0c",
+      "credentials": {
+        "telegramApi": {
+          "id": "LaqP3LaVLRZ6NrT7",
+          "name": "ERP Support"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "\n### PMO-5 · סוכן שירות לקוחות\nבוט טלגרם #2. עונה על שאלות לקוחות לפי מדיניות ומוצרים שנטענו מראש (RAG).",
+        "height": 496,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2640,
+        -480
+      ],
+      "typeVersion": 1,
+      "id": "b8b8dd72-5153-4b46-ba24-501fa5632bcb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Telegram Trigger\nמקבל הודעה מלקוח בבוט התמיכה.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2208,
+        -512
+      ],
+      "typeVersion": 1,
+      "id": "765adc62-3880-41f0-8f22-c08e6480a1a7",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### AI Agent\nעונה על השאלה בעזרת gpt-4o-mini ושני כלי החיפוש (מדיניות + מוצרים).",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1664,
+        -512
+      ],
+      "typeVersion": 1,
+      "id": "c76a5bef-62df-4f64-9b71-2c07fb1991ad",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Send a text message\nשולח את תשובת הסוכן חזרה ללקוח בטלגרם.",
+        "height": 176,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1008,
+        -512
+      ],
+      "typeVersion": 1,
+      "id": "a860a6d2-12ca-4afe-b05d-c2849a157d00",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### Simple Vector Store1 — מוצרים\nמאגר וקטורי של קטלוג המוצרים; נטען מ-PMO-7.\n",
+        "height": 176,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1888,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "8a982ee8-a8b0-43b1-9b78-70e763c221bc",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### Simple Vector Store \n מדיניות\nמאגר וקטורי של מסמכי \nמדיניות/נהלים; נטען מ\n-PMO-6.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1344,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "ce75dd0e-583f-4c0c-9a51-7e1c143b318b",
+      "name": "Sticky Note5"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "a8007ce4-4a7c-4721-b10a-047505fc021d",
+  "activeVersionId": "a8007ce4-4a7c-4721-b10a-047505fc021d",
+  "versionCounter": 210,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-09-03T23:48:14.189Z",
+      "createdAt": "2026-09-03T23:48:14.189Z",
+      "role": "workflow:owner",
+      "workflowId": "quU84dUpSZkeWGBr",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": "Version a8007ce4",
+    "description": ""
+  }
+}

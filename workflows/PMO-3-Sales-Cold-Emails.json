@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-08-29T19:19:06.328Z",
+  "updatedAt": "2026-09-04T19:43:59.411Z",
   "createdAt": "2026-08-29T12:53:03.995Z",
   "id": "nA87g3ru8o8sBgTC",
-  "name": "2 - Sales Cold Emails",
+  "name": "PMO - 3 - Sales Cold Emails",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -21,8 +21,8 @@
       "id": "71c4e1f8-8193-4e20-8426-81ea31f9f1a8",
       "name": "Every 3 Hours",
       "position": [
-        48,
-        256
+        -112,
+        160
       ],
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2
@@ -52,8 +52,8 @@
       "id": "d49a2041-afd8-4ce2-84b5-050ec3f8b5c2",
       "name": "Search New Leads",
       "position": [
-        384,
-        224
+        192,
+        272
       ],
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
@@ -74,8 +74,8 @@
       "id": "20ebb8bf-ae5b-468e-a672-8f5694a68645",
       "name": "Write Cold Email",
       "position": [
-        656,
-        144
+        576,
+        160
       ],
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5
@@ -84,14 +84,14 @@
       "parameters": {
         "sendTo": "={{ $('Search New Leads').item.json.Email }}",
         "subject": "הצעה מיוחדת מ-AI Electronics",
-        "message": "={{ $json.text }}",
+        "message": "=<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f4f4f7;padding:24px 0;font-family:Arial,Helvetica,sans-serif;\">\n  <tr><td align=\"center\">\n    <table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#ffffff;border-radius:8px;overflow:hidden;direction:rtl;text-align:right;\">\n      <tr>\n        <td style=\"background:#0b1f3a;padding:20px 28px;\">\n          <span style=\"color:#ffffff;font-size:20px;font-weight:bold;letter-spacing:.5px;\">AI&nbsp;Electronics</span>\n        </td>\n      </tr>\n      <tr>\n        <td style=\"padding:28px;color:#1a1a1a;font-size:15px;line-height:1.7;\">\n          {{ $json.text.replaceAll('\\n','<br>') }}\n        </td>\n      </tr>\n      <tr>\n        <td style=\"padding:18px 28px;background:#f0f2f5;color:#6b7280;font-size:12px;line-height:1.6;\">\n          AI Electronics · קמעונאות אלקטרוניקה לעסקים<br>\n          מייל זה נשלח כפנייה עסקית. להסרה מהרשימה, השב \"הסר\".\n        </td>\n      </tr>\n    </table>\n  </td></tr>\n</table>\n",
         "options": {}
       },
       "id": "341bb1a5-7b22-4730-a7bd-dcfdaed92736",
       "name": "Send Email",
       "position": [
-        1056,
-        208
+        992,
+        272
       ],
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
@@ -228,8 +228,8 @@
       "id": "83899549-d399-4e68-98d2-fe8153c60131",
       "name": "Mark Contacted",
       "position": [
-        1360,
-        240
+        1280,
+        176
       ],
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
@@ -248,8 +248,8 @@
       "id": "22aa93de-b164-499f-83f7-acce3a0c0569",
       "name": "Chat Model",
       "position": [
-        544,
-        432
+        400,
+        448
       ],
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
@@ -264,90 +264,112 @@
       "parameters": {
         "content": "### Every 3 Hours\nטריגר תזמון — רץ כל 3 שעות ומפעיל את מחזור הפנייה היזומה ללידים.",
         "height": 184,
-        "width": 172
+        "width": 188,
+        "color": 4
       },
       "id": "22cb9189-d35b-43a5-a54e-1c669ac22290",
       "name": "📝 Every 3 Hours",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -48,
-        32
+        -144,
+        -80
       ]
     },
     {
       "parameters": {
         "content": "### Search New Leads\nשולף מ-Airtable\n עד 10 לידים מטבלת\n Leads שה-Status שלהם = 'New'.",
         "height": 184,
-        "width": 204
+        "width": 204,
+        "color": 4
       },
       "id": "f410aa3f-a59e-4ffe-ac6f-8df1b48683a1",
       "name": "📝 Search New Leads",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        208,
+        176,
         0
       ]
     },
     {
       "parameters": {
         "content": "### Write Cold Email\nשרשרת LLM — מנסחת מייל מכירה קצר וידידותי בעברית לכל ליד (שם / חברה / תחום עניין), עד 120 מילים, מחזירה רק את גוף המייל.",
-        "height": 216,
-        "width": 252
+        "height": 200,
+        "width": 236,
+        "color": 4
       },
       "id": "9de65dec-833e-44b7-8c17-491dabeeffa4",
       "name": "📝 Write Cold Email",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        592,
-        -64
+        560,
+        -96
       ]
     },
     {
       "parameters": {
         "content": "### Send Email\nשולח את המייל שנוצר דרך Gmail לכתובת הליד.\n⚠️ מפנה לשדה '…json.Emailsds' — שם שדה שגוי, אמור להיות Email.",
         "height": 184,
-        "width": 252
+        "width": 252,
+        "color": 4
       },
       "id": "001e72e3-111a-4a01-8d2d-7b74d2e5d537",
       "name": "📝 Send Email",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        976,
-        -32
+        896,
+        16
       ]
     },
     {
       "parameters": {
         "content": "### Mark Contacted\nמעדכן ב-Airtable את הליד ל-Status = 'Contacted' לפי ה-id, כדי שלא יקבל מייל שוב בריצה הבאה.",
         "height": 184,
-        "width": 268
+        "width": 268,
+        "color": 4
       },
       "id": "6ce0eed4-630d-48d9-92a7-338bdc1a92eb",
       "name": "📝 Mark Contacted",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1344,
-        0
+        1280,
+        -48
       ]
     },
     {
       "parameters": {
         "content": "### Chat Model\nמודל השפה (OpenAI) שה-node 'Write Cold Email' משתמש בו לניסוח.",
         "height": 168,
-        "width": 252
+        "width": 236,
+        "color": 4
       },
       "id": "3cad1a91-09e2-454e-bf86-c819ba0b9644",
       "name": "📝 Chat Model",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        240,
-        416
+        528,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### PMO-3 · סוכן מכירות — מיילים קרים\nכל 3 שעות שולח מייל פתיחה אישי ללידים חדשים ומסמן שנוצר קשר.\n",
+        "height": 408,
+        "width": 220,
+        "color": 3
+      },
+      "id": "713b3037-9a8f-45e8-88f5-8841fea35876",
+      "name": "📝 Every 3 Hours1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        16
       ]
     }
   ],
@@ -415,17 +437,26 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "staticData": null,
+  "staticData": {
+    "node:Every 3 Hours": {
+      "recurrenceRules": [
+        12
+      ],
+      "recurrenceRuleSignatures": [
+        "hours:3"
+      ]
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "dd8329e78b6e09d6a2ab07ed1e55ff263fde7292aa0503e159a621580d088164"
   },
   "nodeGroups": [],
   "pinData": {},
-  "versionId": "5d76ae06-0201-433f-b1dd-0924e8b51002",
-  "activeVersionId": null,
-  "versionCounter": 62,
-  "triggerCount": 0,
+  "versionId": "81c6ff6c-484e-4da6-a726-59da7b297a78",
+  "activeVersionId": "b3914f72-9c43-4dfd-b087-dd3b032b034c",
+  "versionCounter": 113,
+  "triggerCount": 1,
   "sourceWorkflowId": null,
   "tags": [],
   "shared": [

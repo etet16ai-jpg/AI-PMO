@@ -1,0 +1,436 @@
+{
+  "updatedAt": "2026-09-06T23:12:05.107Z",
+  "createdAt": "2026-09-03T13:46:36.824Z",
+  "id": "2qoKP9Gj7PlWOpiI",
+  "name": "PMO - 4 - Sales Reply",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -720,
+        -112
+      ],
+      "id": "3e9cefad-04ba-46fc-bc27-0e71f9a8a407",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 1,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -464,
+        48
+      ],
+      "id": "7d43c21a-7bd8-4b61-9a2a-a64ad7699e5e",
+      "name": "Get many messages",
+      "webhookId": "53d4506a-0474-4fe1-b6a0-95d81b0e38a6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "E7pMFSRZ7ptTXkDT",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblIIiy3xW8az3LHN",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tblIIiy3xW8az3LHN"
+        },
+        "filterByFormula": "{Status} = 'Contacted'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        -112
+      ],
+      "id": "12ed6aac-5cc5-4989-b3d4-e7282b5ad528",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3132d903-5fdd-4681-84e8-c24c697229db",
+              "leftValue": "={{ $json.fields.Status }}",
+              "rightValue": "Contacted",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        64
+      ],
+      "id": "f6ec26fa-29ae-4f8a-ab81-56255cec84f5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblIIiy3xW8az3LHN",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tblIIiy3xW8az3LHN"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.fields.Email }}",
+            "Status": "Replied"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created",
+              "displayName": "Created",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Interest",
+              "displayName": "Interest",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        -112
+      ],
+      "id": "a8eb8621-b268-4c4b-b63b-347ecd18eb0e",
+      "name": "Update record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Schedule Trigger\nרץ כל 30 דקות ומפעיל את הבדיקה.",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -896,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "c1f7e5ca-4b44-4216-b249-5094c53d458b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Get many messages\nשולף מ-Gmail הודעות תשובה שהתקבלו.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "28feccb1-1dc7-441c-bb73-0f52d255d32c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### Search records\nמחפש ב-Leads את השולח לפי כתובת האימייל.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -304,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "db1bdd14-cbc8-4ace-90ba-0de035863fba",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### If — נמצא ליד?\nנמצאה התאמה ב-Leads? כן → עדכון. לא → דילוג.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "97a2fa3a-f036-4891-86dc-5c1eb1c4bbca",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### Update record\nמסמן את הליד Status = Replied.",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "4fdf827c-2487-4922-9dd1-b4982361457b",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### PMO-4 · בדיקת תשובות ממכירות\nכל 30 דק' בודק אימיילים חדשים ומעדכן לידים שהגיבו למייל הקר.",
+        "height": 400,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1296,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "39c1ccd1-f0ce-48e7-873e-a5eb57c37ad6",
+      "name": "Sticky Note7"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "17e823fb-b0cf-4ec8-8119-b38729139b75",
+  "activeVersionId": "67bb2df6-7f1e-4bfb-832e-2ac3367e410d",
+  "versionCounter": 103,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-09-03T13:46:36.827Z",
+      "createdAt": "2026-09-03T13:46:36.827Z",
+      "role": "workflow:owner",
+      "workflowId": "2qoKP9Gj7PlWOpiI",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

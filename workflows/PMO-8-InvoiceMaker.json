@@ -1,0 +1,413 @@
+{
+  "updatedAt": "2026-09-06T23:48:00.165Z",
+  "createdAt": "2026-09-03T22:14:30.598Z",
+  "id": "BcMqyGFxsgY5qthQ",
+  "name": "PMO - 8 - InvoiceMaker",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1280,
+        -96
+      ],
+      "id": "d110f0d1-84e6-4ca9-a09a-3a4399eb23d7",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbljrqY8DIsqSEk9U",
+          "mode": "list",
+          "cachedResultName": "Invoices",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tbljrqY8DIsqSEk9U"
+        },
+        "filterByFormula": "=AND({Status}=\"Ready\", {PdfUrl}=BLANK())",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -928,
+        48
+      ],
+      "id": "3119a35f-9535-47b4-80d8-1596a41d808d",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"he\" dir=\"rtl\">\n<head><meta charset=\"utf-8\">\n<style>\n  body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f7;margin:0;padding:24px;color:#1a1a1a}\n  .inv{max-width:640px;margin:0 auto;background:#fff;border:1px solid #ddd;border-radius:8px;padding:32px}\n  .head{display:flex;justify-content:space-between;border-bottom:2px solid #0b1f3a;padding-bottom:16px;margin-bottom:24px}\n  .brand{font-size:22px;font-weight:bold;color:#0b1f3a}\n  .brand small{display:block;font-size:12px;font-weight:normal;color:#666}\n  .meta{text-align:left;font-size:14px;line-height:1.8}\n  table{width:100%;border-collapse:collapse;margin:20px 0}\n  th,td{border:1px solid #ddd;padding:10px;text-align:right;font-size:14px}\n  th{background:#f0f2f5}\n  .total-row td{font-weight:bold;font-size:16px;background:#f0f2f5}\n  .foot{margin-top:24px;font-size:12px;color:#666;border-top:1px solid #eee;padding-top:12px}\n</style></head>\n<body>\n  <div class=\"inv\">\n    <div class=\"head\">\n      <div class=\"brand\">AI Electronics<small>עוסק מורשה 000000000</small></div>\n      <div class=\"meta\">\n        <div>חשבונית מס <b>{{ $json.fields.InvoiceNumber }}</b></div>\n        <div>תאריך: {{ $now.format('dd/MM/yyyy') }}</div>\n        <div>לקוח: {{ $json.fields.CustomerId }}</div>\n      </div>\n    </div>\n    <table>\n      <tr><th>תיאור</th><th>סכום לפני מע\"מ</th><th>מע\"מ (18%)</th><th>סה\"כ</th></tr>\n      <tr>\n        <td>מוצרי אלקטרוניקה</td>\n        <td>{{ $json.fields.Amount }} &#8362;</td>\n        <td>{{ $json.fields.VatAmount }} &#8362;</td>\n        <td>{{ $json.fields.Total }} &#8362;</td>\n      </tr>\n      <tr class=\"total-row\"><td colspan=\"3\">סה\"כ לתשלום</td><td>{{ $json.fields.Total }} &#8362;</td></tr>\n    </table>\n    <div class=\"foot\">מסמך זה הופק אוטומטית ע\"י מערכת AI Electronics.</div>\n  </div>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -560,
+        -96
+      ],
+      "id": "8f1568fd-27e9-4da2-8078-0350fa6d3fa7",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html",
+        "options": {
+          "fileName": "=invoice-{{ $(\"Search records\").item.json.fields.InvoiceNumber }}.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        48
+      ],
+      "id": "17da818f-3c02-4b54-91ae-908c23a43cbb",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        224,
+        -112
+      ],
+      "id": "08ef87a3-1885-4909-be7c-557e72a415a9",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "toFTmLkVc9fM5CeR",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "applW5fvKCDzpHi0o",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tbljrqY8DIsqSEk9U",
+          "cachedResultName": "Invoices",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tbljrqY8DIsqSEk9U"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Search records').item.json.id }}",
+            "PdfUrl": "={{ $json.webViewLink }}",
+            "Status": "Issued"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "PdfUrl",
+              "displayName": "PdfUrl",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        0
+      ],
+      "id": "0dca96f3-0e90-42f0-b989-401653f8750d",
+      "name": "Update record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### PMO-8 · הפקת מסמך חשבונית → Drive\nקולט חשבוניות בתור (Status=Ready), בונה HTML, מעלה ל-Drive, ומסמן Issued.\n",
+        "height": 368,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1664,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "a7517d78-5124-48f8-931a-935f710e76c9",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "### Search records\nשולף מ-Invoices רשומות עם Status=Ready ו-PdfUrl ריק — התור ש-WF1 ממלא.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1056,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "049936ba-7419-415b-9e55-bf3fea086469",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Telegram Trigger\nמקבל הודעה מלקוח בבוט התמיכה.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1312,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "1a824dd3-299b-45cd-a34c-e1445933b794",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Convert to File\nהופך את ה-HTML לקובץ טקסט בשם invoice-<מספר>.html.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "a90de4e5-c672-4fe6-963d-7d12c9810fdc",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "### HTML — תבנית החשבונית\nתבנית RTL בעברית; ממלא InvoiceNumber, לקוח, סכום, מע\"מ, סה\"כ ותאריך.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -576,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "621fec0a-5877-450e-8160-4f1ae34c34ad",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "### Upload file — Google Drive\nמעלה את הקובץ לדרייב ומחזיר קישור צפייה (webViewLink).",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        -336
+      ],
+      "typeVersion": 1,
+      "id": "80c79beb-2d30-45ac-93b2-4c174a0d59ba",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "### Update record\nכותב את הקישור ל-PdfUrl ומעדכן Status = Issued לפי id.",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        448,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "bbcce4ca-b1d1-4be9-94d6-832b5d8d93ff",
+      "name": "Sticky Note12"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "0c442ec8-6583-44bf-b385-32241d1bfd83",
+  "activeVersionId": "e6fb91b4-67ee-4a16-ba0e-6e5c589c8a63",
+  "versionCounter": 128,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-09-03T22:14:30.602Z",
+      "createdAt": "2026-09-03T22:14:30.602Z",
+      "role": "workflow:owner",
+      "workflowId": "BcMqyGFxsgY5qthQ",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

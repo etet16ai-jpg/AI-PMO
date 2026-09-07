@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-08-29T14:26:52.069Z",
+  "updatedAt": "2026-09-04T19:43:41.078Z",
   "createdAt": "2026-08-29T12:53:03.988Z",
   "id": "YkudVfHXbhmvKAvb",
-  "name": "1 - Leads -> Airtable",
+  "name": "PMO - 2 - Leads Intake",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -18,8 +18,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -592,
-        32
+        -928,
+        -80
       ],
       "id": "cf85c97c-a42f-44f6-b670-edb1245a35e1",
       "name": "Webhook",
@@ -50,15 +50,15 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        -208,
-        -64
+        -624,
+        -32
       ],
       "id": "6840df34-3aa6-4e76-9187-d3f742fe20bc",
       "name": "Search records",
       "alwaysOutputData": true,
       "credentials": {
         "airtableTokenApi": {
-          "id": "xLyMzrrhJ7AQ9ItJ",
+          "id": "Np6jH6h8zk1pkGpB",
           "name": "Airtable Personal Access Token account"
         }
       },
@@ -93,8 +93,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        64,
-        -160
+        -224,
+        -192
       ],
       "id": "03a589d6-77e0-4222-9e8c-333d17366d01",
       "name": "If"
@@ -179,14 +179,14 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        640,
+        176,
         -160
       ],
       "id": "60f8e0e6-6900-4b66-a46f-5ef26920755d",
       "name": "Create a record",
       "credentials": {
         "airtableTokenApi": {
-          "id": "xLyMzrrhJ7AQ9ItJ",
+          "id": "Np6jH6h8zk1pkGpB",
           "name": "Airtable Personal Access Token account"
         }
       }
@@ -201,8 +201,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        64,
-        144
+        -256,
+        192
       ],
       "id": "8158d98e-50c4-4684-973d-c09714bda42a",
       "name": "Send a message",
@@ -218,75 +218,96 @@
       "parameters": {
         "content": "### Webhook\nנקודת הכניסה. מקבל ליד חדש בבקשת POST (שם / אימייל / טלפון) מטופס באתר.\nנתיב: /webhook/a35ea6d4-…",
         "height": 232,
-        "width": 204
+        "width": 188,
+        "color": 4
       },
       "id": "d6517149-2020-409b-b0df-420be4ceafb4",
       "name": "📝 Webhook",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -624,
-        -240
+        -928,
+        -384
       ]
     },
     {
       "parameters": {
         "content": "### Search records\nמחפש בטבלת Leads ב-Airtable אם כבר קיימת רשומה עם אותו אימייל (filterByFormula על שדה Email). מוגבל לתוצאה אחת — לזיהוי כפילויות.",
-        "height": 168,
-        "width": 220
+        "height": 200,
+        "width": 204,
+        "color": 4
       },
       "id": "658a4f82-b5ca-4280-bda9-d80312145dd2",
       "name": "📝 Search records",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -336,
-        -288
+        -672,
+        -320
       ]
     },
     {
       "parameters": {
         "content": "### If\nבודק אם לא נמצאה רשומה קיימת (id לא קיים) — כלומר זה ליד חדש. אם כן ממשיך ליצירה; אחרת עוצר.",
-        "height": 168,
-        "width": 220
+        "height": 200,
+        "width": 204,
+        "color": 4
       },
       "id": "d8b951d1-66b8-41c6-96e7-60e33223d59b",
       "name": "📝 If",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -32,
-        -368
+        -336,
+        -416
       ]
     },
     {
       "parameters": {
         "content": "### Create a record\nיוצר רשומת ליד חדשה בטבלת Leads עם Name / Email / Phone מהטופס ו-Status = 'New'.",
-        "height": 200,
-        "width": 300
+        "height": 216,
+        "width": 252,
+        "color": 4
       },
       "id": "79a5cd93-032b-4e88-95e5-6cb6d05ba5f2",
       "name": "📝 Create a record",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        624,
-        -400
+        368,
+        -336
       ]
     },
     {
       "parameters": {
         "content": "### Send a message\nשולח מייל התראה על הליד דרך Gmail.\n⚠️ כרגע ערכי דמה: נמען tomer@fooks.co.il, נושא ותוכן 'asdasd' — למלא לפני הפעלה.",
         "height": 216,
-        "width": 220
+        "width": 220,
+        "color": 4
       },
       "id": "7d4aca0a-50ee-4c3e-8f3f-5683e303223b",
       "name": "📝 Send a message",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        256,
-        0
+        -64,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### PMO-2 · קליטת לידים\nמקבל ליד חדש, בודק כפילות לפי אימייל, ויוצר רשומה רק אם הוא לא קיים.\n",
+        "height": 456,
+        "width": 252,
+        "color": 3
+      },
+      "id": "76fbf6ea-dec7-4ba1-a39b-2fbb18d87be0",
+      "name": "📝 Webhook1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1408,
+        -288
       ]
     }
   ],
@@ -344,10 +365,10 @@
   },
   "nodeGroups": [],
   "pinData": {},
-  "versionId": "6053955b-1b21-4dc9-b29e-e0334e65308c",
-  "activeVersionId": null,
-  "versionCounter": 37,
-  "triggerCount": 0,
+  "versionId": "f4af5257-2691-4227-9f10-283a17c2fed6",
+  "activeVersionId": "7031135e-7447-4fd5-bb4a-38b85890948c",
+  "versionCounter": 88,
+  "triggerCount": 1,
   "sourceWorkflowId": null,
   "tags": [],
   "shared": [

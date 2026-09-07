@@ -1,0 +1,637 @@
+{
+  "updatedAt": "2026-09-06T23:55:52.389Z",
+  "createdAt": "2026-09-04T00:43:59.127Z",
+  "id": "R3OUwGSSDaQxGFg3",
+  "name": "PMO - 13 - App",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "App",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1584,
+        -128
+      ],
+      "id": "75af4bd1-3483-48c9-aa48-4c7453c8e833",
+      "name": "Webhook",
+      "webhookId": "8d855a83-92ba-454f-a963-109ce00484c3"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2e0628dd-fca1-4b32-9270-df3a592d3c49",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "read",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "read"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3554db23-d26d-4475-98bd-6e0cdffbf06c",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "create"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6308c7eb-6350-4cb1-aa7f-cad3ea64c895",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "update"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "426bf9ee-d8c9-4539-ab64-8cfe338fd818",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "chat",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "chat"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1200,
+        -224
+      ],
+      "id": "e16e8041-d6d1-48b5-9a29-17f4eb91d09a",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $(\"Webhook\").item.json.body.table }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "schema": [],
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -272,
+        -336
+      ],
+      "id": "fd7f90c0-fe3d-4081-8196-c9147bd643a7",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ $(\"Webhook\").item.json.body.table }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "schema": [],
+          "matchingColumns": [
+            "id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -272,
+        -160
+      ],
+      "id": "d6707bcc-531f-4abf-b647-53588a900dda",
+      "name": "Update record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "אתה העוזר החכם של מערכת הניהול של AI Electronics, חנות אלקטרוניקה ישראלית קטנה.\nהמשתמש הוא בעל העסק, שמדבר איתך מתוך אפליקציית הניהול.\n\nענה בעברית, קצר, ענייני ומדויק. פנה אליו כשותף עסקי, לא רשמי מדי.\n\nתחומי אחריות: הסבר על נתוני המערכת (לידים, חשבוניות, מוצרים, משימות),\nעזרה בניסוח טקסטים (מיילים, תיאורי מוצר), והכוונה לגבי תהליכי העבודה במערכת.\n\nמגבלות:\n- אין לך גישה ישירה לנתונים בזמן אמת. אם נשאלת על מספרים או רשומות ספציפיות,\n  אמור שהמידע נמצא במסכים של האפליקציה והפנה לשם.\n- אל תמציא נתונים, מחירים, סכומים או סטטוסים.\n- לשאלות משפטיות (מס, מע\"מ, חשבוניות) — תן כיוון כללי והמלץ להתייעץ עם רואה חשבון."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -928,
+        112
+      ],
+      "id": "84c1b28e-7b58-4c59-9fd8-1e376e7290fe",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -960,
+        320
+      ],
+      "id": "3c0f0d3f-ce63-412d-a621-f1dfdbc591c7",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OKimMQNyEN6En4MH",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        336,
+        -144
+      ],
+      "id": "2a0df344-ebd2-4e67-bc04-2b3c092dd07c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ { \"reply\": $json.output } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -576,
+        -32
+      ],
+      "id": "d3ff9de8-a1c3-4289-a43a-f8988ba413b0",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Webhook').item.json.body.table }}"
+        },
+        "filterByFormula": "={{ $json.body.filter }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -272,
+        -528
+      ],
+      "id": "98443a1c-a160-4612-8d3c-2f6f43d2a9ca",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Webhook\nPOST /App. מקבל את הבקשה מ-Lovable ומחזיר תשובה דרך Respond.",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1568,
+        -336
+      ],
+      "typeVersion": 1,
+      "id": "beec150e-09d6-433f-9d5b-807e3a95b50b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### AI Agent — chat\nעונה על שאלת המשתמש (body.message) עם System Message של עוזר ה-ERP.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1216,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "d3341acc-8548-4102-9d26-662d91aadd3c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### Switch\nלפי body.action מפצל ל-4 מסלולים: read, create, update, chat.",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1232,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "146fb485-3563-4a0b-ad9b-a613a3ae1b7c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### read\nשולף רשומות מהטבלה שב-body.table ומחזיר מערך.\n\n### create\nEdit Fields פורס את body.payload לשדות עליונים; Airtable יוצר רשומה חדשה (Auto-map) ומחזיר אותה.\n\n### update\nEdit Fields1 פורס את body.payload כולל id; Airtable מעדכן את הרשומה לפי id ומחזיר אותה.\n",
+        "height": 480,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        -464
+      ],
+      "typeVersion": 1,
+      "id": "a9da0c04-4ed7-4834-a4f9-f0ab75d812a4",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### Respond to Webhook\nמחזיר לאפליקציה את התוצאה (All Incoming Items) כ-JSON."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        -352
+      ],
+      "typeVersion": 1,
+      "id": "1a6b2752-d933-4986-832f-c47a7d09bb71",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.body.payload }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -576,
+        -416
+      ],
+      "id": "a2a7ba89-9e5b-41d1-93ea-26fe3dedfe8e",
+      "name": "Edit Read"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $('Webhook').item.json.body.payload }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -592,
+        -224
+      ],
+      "id": "d1eaf2f4-d5ae-4b27-846b-92ca830212b3",
+      "name": "Edit Create"
+    },
+    {
+      "parameters": {
+        "content": "### Search records \n read\nשולף רשומות מהטבלה שב-body.table ומחזיר מערך.\n\n### Create a record\nיוצר רשומה חדשה בטבלה הדינמית ומחזיר אותה.\n\n### Update record\nמעדכן רשומה קיימת לפי id ומחזיר אותה.\n\n",
+        "height": 480,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "1a77bed9-7723-4c5b-95d2-716abb535b11",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "### Manager APP\n\n\n אפליקציית מנהל - כל המידע זורם לאפליקציה או חלון הווב של המנהל.\n",
+        "height": 480,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1952,
+        -416
+      ],
+      "typeVersion": 1,
+      "id": "f1070435-7f1e-4469-8d75-78834b78cd2a",
+      "name": "Sticky Note7"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Read",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Create",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update record": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Read": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Create": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "5abab25a-e533-4082-a366-a74001204950",
+  "activeVersionId": "0fe68288-6197-4dfa-8db9-04a4f3f21a97",
+  "versionCounter": 294,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-09-04T00:43:59.130Z",
+      "createdAt": "2026-09-04T00:43:59.130Z",
+      "role": "workflow:owner",
+      "workflowId": "R3OUwGSSDaQxGFg3",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

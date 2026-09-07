@@ -1,0 +1,367 @@
+{
+  "updatedAt": "2026-09-06T23:43:20.160Z",
+  "createdAt": "2026-09-03T14:01:36.531Z",
+  "id": "fMNbF4pmSn784g4m",
+  "name": "PMO - 9 - Manager Agent",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "62fbb9c3-1a26-476c-b528-37856e2ea0ca",
+              "leftValue": "={{ $json.message.chat.id }}",
+              "rightValue": 978295911,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1088,
+        48
+      ],
+      "id": "e74eeab9-41ca-4d94-82e2-87268006ff61",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "אתה עוזר אנליטי אישי של בעל עסק אלקטרוניקה קטן. אתה עונה בטלגרם, בעברית, קצר וברור.\n\nעם כל שאלה אתה מקבל טבלת סיכום של החשבוניות מקובצת לפי סטטוס. לכל שורה יש שלושה שדות:\n- Status – סטטוס החשבונית\n- sum_Total – סכום ה-Total של החשבוניות באותו סטטוס, בשקלים\n- count_InvoiceNumber – מספר החשבוניות באותו סטטוס\n\nכללי חישוב:\n- הכנסות = סכום sum_Total של כל השורות.\n- מספר חשבוניות = סכום count_InvoiceNumber של כל השורות.\n- סכום שלא שולם = סכום sum_Total של השורות שהסטטוס שלהן אינו Paid.\n\nענה רק על מה שנשאלת, במשפט אחד או שניים, עם המספר ו-₪. אם אין נתונים רלוונטיים, אמור זאת במפורש.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -704,
+        -32
+      ],
+      "id": "43e813df-f859-43d6-a546-14d7b71745aa",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -800,
+        224
+      ],
+      "id": "e1d41e0e-ecde-4ff3-830e-749e22cf0144",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OKimMQNyEN6En4MH",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "={{ $json.output }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -144,
+        -80
+      ],
+      "id": "1feba55f-371f-4af7-b04d-3636dc10ffb5",
+      "name": "Send message and wait for response",
+      "webhookId": "52e2cfb1-cbb5-41d6-9ef8-55fe1d4e42db",
+      "credentials": {
+        "telegramApi": {
+          "id": "tgMgrErp00000001",
+          "name": "TG Manager ERP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -1440,
+        -16
+      ],
+      "id": "9bfd08f9-9366-4c00-90c7-ea42f3b87ade",
+      "name": "Telegram Trigger",
+      "webhookId": "b6c635dd-30e0-47ae-9b03-1ce6dbe583ac",
+      "credentials": {
+        "telegramApi": {
+          "id": "tgMgrErp00000001",
+          "name": "TG Manager ERP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "applW5fvKCDzpHi0o",
+          "mode": "list",
+          "cachedResultName": "ERP-AI",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbljrqY8DIsqSEk9U",
+          "mode": "list",
+          "cachedResultName": "Invoices",
+          "cachedResultUrl": "https://airtable.com/applW5fvKCDzpHi0o/tbljrqY8DIsqSEk9U"
+        },
+        "filterByFormula": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filter_By_Formula', ``, 'string') }}",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        224
+      ],
+      "id": "69512f51-2b5b-4c25-bbe8-211f6fb4b80c",
+      "name": "Search records in Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np6jH6h8zk1pkGpB",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Telegram Trigger\n\n\nבוט 2 מנהל\nכל הודעה נכנסת מהבעלים מפעילה את התהליך\n",
+        "height": 400,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1776,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "ceb1aa82-0953-49a4-8994-5bbbad75e5d2",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "### Telegram Trigger\nמקבל הודעה מלקוח בבוט התמיכה.\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1472,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "37011614-fb2e-40a2-ae02-6abbe2a6ccd4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### IF\n\nבודק שההודעה מגיעה מה-Chat ID של הבעלים בלבד",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1152,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "c6dac590-b770-4212-a5df-d17f0ab371fd",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### AI Agent\n\nמנסח תשובה בעברית לשאלות אנליטיקה (הכנסות, מספר חשבוניות, סכומים שלא שולמו), \nAirtableבעזרת כלי החיפוש ב",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -752,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "4a940b38-c0d8-4ad9-9425-1f61a2f3f5b5",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Open AI\n\nמודל השפה שמפעיל את הסוכן.",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1120,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "2d3e2799-b465-4730-92df-f00f45eb9429",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### Search in Airtable\n\nכלי לסוכן: שולף רשומות (חשבוניות) מ-Airtable לפי הצורך כדי לענות על השאלה\n",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -576,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "a2e93126-73f0-4fec-888c-c2f66c09a459",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### Send and wait response\n\nשולח את תשובת הסוכן בחזרה לבעלים בטלגרם.",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "351dd00e-9a45-44b9-ae48-84fe92a43e06",
+      "name": "Sticky Note5"
+    }
+  ],
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records in Airtable": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "2efe3511-c420-430c-a634-e89645c2bd59",
+  "activeVersionId": "2a787056-cec6-403b-9bf3-e1083243e939",
+  "versionCounter": 172,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-09-03T14:01:36.534Z",
+      "createdAt": "2026-09-03T14:01:36.534Z",
+      "role": "workflow:owner",
+      "workflowId": "fMNbF4pmSn784g4m",
+      "projectId": "Le4qWZf9IOOQlYTt",
+      "project": {
+        "updatedAt": "2026-08-22T10:06:16.572Z",
+        "createdAt": "2026-08-21T08:37:10.854Z",
+        "id": "Le4qWZf9IOOQlYTt",
+        "name": "אלעד תנעמי <etet16@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "6aa08dfc-6234-491e-941f-0f908f7581f2"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}
